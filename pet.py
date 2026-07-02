@@ -48,7 +48,7 @@ label.bind("<B1-Motion>", drag)
 # Right-click to close
 label.bind("<Button-3>", lambda e: root.destroy())
 
-# 🌀 Animate the pet
+#  Animate the pet
 frame_index = 0
 def animate():
     global frame_index
@@ -56,7 +56,7 @@ def animate():
     label.config(image=frames[frame_index])
     root.after(300, animate)  # update frame every 300ms
 
-# 🚶 Move pet randomly
+#  Move pet randomly
 def move_randomly():
     global x_pos, y_pos
     dx = random.choice([-20, -10, 0, 10, 20])
@@ -71,7 +71,7 @@ def move_randomly():
     root.geometry(f"+{x_pos}+{y_pos}")
     root.after(2000, move_randomly)
 
-# ✅ Start animation and movement
+#  Start animation and movement
 animate()
 move_randomly()
 root.mainloop()
