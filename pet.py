@@ -3,78 +3,109 @@ from PIL import Image, ImageTk
 import os
 import random
 
-# Setup main window
-root = tk.Tk()
-root.overrideredirect(True)
-root.wm_attributes("-topmost", True)
-root.wm_attributes("-transparentcolor", "white")
+class DesktopPet:
+    def __init__(self, root):
+        self.root = root
+        
+        # 1. Window Configuration
+        self.root.overrideredirect(True)
+        self.root.wm_attributes("-topmost", True)
+        self.root.wm_attributes("-transparentcolor", "white")
+        
+        # Screen dimensions
+        self.sw = self.root.winfo_screenwidth()
+        self.sh = self.root.winfo_screenheight()
+        
+        # Core positioning variables
+        self.x_pos = 300
+        self.y_pos = 300
+        self.target_x = self.x_pos
+        self.target_y = self.y_pos
+        self.root.geometry(f"100x100+{self.x_pos}+{self.y_pos}")
 
-# Load animation frames
-frame_files = ["pet1.png", "pet2.png", "pet3.png"]
-frames = []
+        # 2. Load Animation Frames
+        self.frame_files = ["pet1.png", "pet2.png", "pet3.png"]
+        self.frames = self.load_frames()
+        self.frame_index = 0
 
-for file in frame_files:
-    if os.path.exists(file):
-        img = Image.open(file).resize((100, 100))
-        frames.append(ImageTk.PhotoImage(img))
-    else:
-        print(f"Missing image: {file}")
-        root.destroy()
-        exit()
+        # 3. Setup UI Widget
+        self.label = tk.Label(self.root, image=self.frames[0], bg='white')
+        self.label.pack()
 
-# Display the first frame
-label = tk.Label(root, image=frames[0], bg='white')
-label.pack()
+        # 4. Bind Events
+        self.label.bind("<Button-1>", self.start_drag)
+        self.label.bind("<B1-Motion>", self.drag)
+        self.label.bind("<Button-3>", lambda e: self.root.destroy()) # Right-click close
 
-# Initial position
-x_pos = 300
-y_pos = 300
-root.geometry(f"+{x_pos}+{y_pos}")
+        # 5. Start Loops
+        self.animate()
+        self.choose_new_action()
+        self.smooth_move_loop()
 
-# Drag functionality
-def start_drag(event):
-    root.x = event.x
-    root.y = event.y
+    def load_frames(self):
+        """Loads and resizes image assets safely."""
+        loaded_frames = []
+        for file in self.frame_files:
+            if os.path.exists(file):
+                img = Image.open(file).resize((100, 100))
+                loaded_frames.append(ImageTk.PhotoImage(img))
+            else:
+                print(f"Error: Missing image file '{file}'")
+                self.root.destroy()
+                exit()
+        return loaded_frames
 
-def drag(event):
-    global x_pos, y_pos
-    x_pos = event.x_root - root.x
-    y_pos = event.y_root - root.y
-    root.geometry(f"+{x_pos}+{y_pos}")
+    def start_drag(self, event):
+        """Stores internal click offsets for dragging."""
+        self.drag_start_x = event.x
+        self.drag_start_y = event.y
 
-label.bind("<Button-1>", start_drag)
-label.bind("<B1-Motion>", drag)
+    def drag(self, event):
+        """Handles manual dragging, updating targets so it doesn't snap back."""
+        self.x_pos = event.x_root - self.drag_start_x
+        self.y_pos = event.y_root - self.drag_start_y
+        
+        # Sync targets so the pet stays put when dropped
+        self.target_x, self.target_y = self.x_pos, self.y_pos
+        self.root.geometry(f"+{self.x_pos}+{self.y_pos}")
 
-# Right-click to close
-label.bind("<Button-3>", lambda e: root.destroy())
+    def animate(self):
+        """Cycles through the loaded sprite frames."""
+        self.frame_index = (self.frame_index + 1) % len(self.frames)
+        self.label.config(image=self.frames[self.frame_index])
+        self.root.after(300, self.animate)
 
-#  Animate the pet
-frame_index = 0
-def animate():
-    global frame_index
-    frame_index = (frame_index + 1) % len(frames)
-    label.config(image=frames[frame_index])
-    root.after(300, animate)  # update frame every 300ms
+    def choose_new_action(self):
+        """Every few seconds, decides whether to stay still or pick a new target position."""
+        # 70% chance to move, 30% chance to sit idle
+        if random.random() < 0.70:
+            # Pick a completely random spot on the screen
+            # Shaving 150 off height keeps it safely above standard taskbars
+            self.target_x = random.randint(0, self.sw - 100)
+            self.target_y = random.randint(0, self.sh - 150)
+        
+        # Decide next action interval (between 3 to 6 seconds)
+        self.root.after(random.randint(3000, 6000), self.choose_new_action)
 
-#  Move pet randomly
-def move_randomly():
-    global x_pos, y_pos
-    dx = random.choice([-20, -10, 0, 10, 20])
-    dy = random.choice([-20, -10, 0, 10, 20])
+    def smooth_move_loop(self):
+        """Moves the pet fractions of the way to its target every 20ms for smooth sliding."""
+        # Calculate distance to target
+        dx = self.target_x - self.x_pos
+        dy = self.target_y - self.y_pos
 
-    sw = root.winfo_screenwidth()
-    sh = root.winfo_screenheight()
+        # If we are far enough from target, step closer (easing effect)
+        if abs(dx) > 2 or abs(dy) > 2:
+            self.x_pos += int(dx * 0.05) # Moves 5% of the remaining distance per frame
+            self.y_pos += int(dy * 0.05)
+            self.root.geometry(f"+{self.x_pos}+{self.y_pos}")
 
-    x_pos = max(0, min(x_pos + dx, sw - 100))
-    y_pos = max(0, min(y_pos + dy, sh - 100))
+        # Run at ~50 FPS for smooth rendering
+        self.root.after(20, self.smooth_move_loop)
 
-    root.geometry(f"+{x_pos}+{y_pos}")
-    root.after(2000, move_randomly)
-
-#  Start animation and movement
-animate()
-move_randomly()
-root.mainloop()
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = DesktopPet(root)
+    root.mainloop()
 
 
 
