@@ -73,7 +73,7 @@ class DesktopPet:
         """Cycles through the loaded sprite frames."""
         self.frame_index = (self.frame_index + 1) % len(self.frames)
         self.label.config(image=self.frames[self.frame_index])
-        self.root.after(300, self.animate)
+        self.root.after(350, self.animate)
 
     def choose_new_action(self):
         """Every few seconds, decides whether to stay still or pick a new target position."""
@@ -108,4 +108,4 @@ if __name__ == "__main__":
     root.mainloop()
 
 
-
+#just small changes todayy
