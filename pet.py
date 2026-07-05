@@ -43,7 +43,7 @@ class DesktopPet:
         self.smooth_move_loop()
 
     def load_frames(self):
-        """Loads and resizes image assets safely."""
+        """Loads and resizes image assets safely!"""
         loaded_frames = []
         for file in self.frame_files:
             if os.path.exists(file):
