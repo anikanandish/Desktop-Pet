@@ -21,6 +21,8 @@ class DesktopPet:
         
         # Core positioning variables
         self.x_pos = 300
+        # Track current state
+        self.state = "idle"
         self.y_pos = 300
         self.target_x = self.x_pos
         self.target_y = self.y_pos
