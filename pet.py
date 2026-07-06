@@ -6,6 +6,9 @@ import random
 class DesktopPet:
     def __init__(self, root):
         self.root = root
+        # 1. Window Configuration
+        self.root.title("My Desktop Pet")
+        self.root.overrideredirect(True)
         
         # 1. Window Configuration
         self.root.overrideredirect(True)
