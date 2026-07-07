@@ -21,12 +21,14 @@ class DesktopPet:
         
         # Core positioning variables
         self.x_pos = 300
-        # Track current state
-        self.state = "idle"
+        
+
         self.y_pos = 300
         self.target_x = self.x_pos
         self.target_y = self.y_pos
         self.root.geometry(f"100x100+{self.x_pos}+{self.y_pos}")
+        # Track current state
+        self.state = "idle"
 
         # 2. Load Animation Frames
         self.frame_files = ["pet1.png", "pet2.png", "pet3.png"]
