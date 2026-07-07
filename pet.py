@@ -29,6 +29,10 @@ class DesktopPet:
         self.root.geometry(f"100x100+{self.x_pos}+{self.y_pos}")
         # Track current state
         self.state = "idle"
+      
+
+
+
 
         # 2. Load Animation Frames
         self.frame_files = ["pet1.png", "pet2.png", "pet3.png"]
@@ -48,7 +52,6 @@ class DesktopPet:
         self.animate()
         self.choose_new_action()
         self.smooth_move_loop()
-
     def load_frames(self):
         """Loads and resizes image assets safely!"""
         loaded_frames = []
@@ -66,7 +69,6 @@ class DesktopPet:
         """Stores internal click offsets for dragging."""
         self.drag_start_x = event.x
         self.drag_start_y = event.y
-
     def drag(self, event):
         """Handles manual dragging, updating targets so it doesn't snap back."""
         self.x_pos = event.x_root - self.drag_start_x
@@ -75,7 +77,6 @@ class DesktopPet:
         # Sync targets so the pet stays put when dropped
         self.target_x, self.target_y = self.x_pos, self.y_pos
         self.root.geometry(f"+{self.x_pos}+{self.y_pos}")
-
     def animate(self):
         """Cycles through the loaded sprite frames."""
         self.frame_index = (self.frame_index + 1) % len(self.frames)
@@ -114,5 +115,3 @@ if __name__ == "__main__":
     app = DesktopPet(root)
     root.mainloop()
 
-
-#just small changes todayy
