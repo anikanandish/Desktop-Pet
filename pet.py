@@ -17,6 +17,8 @@ class DesktopPet:
         self.root.overrideredirect(True)
         self.root.wm_attributes("-topmost", True)
         self.root.wm_attributes("-transparentcolor", "white")
+        self.happiness = 100  # Starts at max happiness
+        self.click_count = 0  # Tracks user interactions
         
         # Screen dimensions
         self.sw = self.root.winfo_screenwidth()
