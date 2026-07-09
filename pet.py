@@ -33,6 +33,8 @@ class DesktopPet:
         self.target_y = self.y_pos
         self.root.geometry(f"100x100+{self.x_pos}+{self.y_pos}")
         self.speed = 2  # Pixels it moves per frame update
+        self.direction = "right"  # Can be "left" or "right"
+        self.last_interact_time = 0  # Tracks timestamp of last click
         # Track current state
         self.state = "idle"
       
