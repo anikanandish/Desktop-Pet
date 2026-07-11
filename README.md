@@ -1,6 +1,6 @@
 # DesktopPet Companion
 
-A fun, interactive Python desktop pet that hangs out on your screen while you code or work. 
+A fun, cute,interactive Python desktop pet that hangs out on your screen while you code or work. 
 Built using tkinter, it runs on a transparent canvas so it looks like the pet is walking right on top of your desktop wallpaper,
 instead of sitting inside a window block.
 
