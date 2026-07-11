@@ -123,7 +123,7 @@ class DesktopPet:
         # A simple 10% chance to blink on any given frame update
         import random
         if random.random() < 0.10:
-            print("Blinking!") 
+            print("Blinking!") # to be hooked up to a blink frame later
 
 if __name__ == "__main__":
     root = tk.Tk()
