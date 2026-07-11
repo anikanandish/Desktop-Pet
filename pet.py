@@ -118,6 +118,13 @@ class DesktopPet:
         # Run at ~50 FPS for smooth rendering
         self.root.after(20, self.smooth_move_loop)
 
+
+    def check_blink(self):
+        # A simple 10% chance to blink on any given frame update
+        import random
+        if random.random() < 0.10:
+            print("Blinking!") 
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = DesktopPet(root)
