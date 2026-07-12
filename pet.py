@@ -125,6 +125,12 @@ class DesktopPet:
         import random
         if random.random() < 0.10:
             print("Blinking!") # to be hooked up to a blink frame later
+    def update_movement(self):
+        # Move right if direction is right, move left if direction is left
+        if self.direction == "right":
+            self.root.geometry(f"+{self.root.winfo_x() + self.speed}+{self.root.winfo_y()}")
+        else:
+            self.root.geometry(f"+{self.root.winfo_x() - self.speed}+{self.root.winfo_y()}")
 
 if __name__ == "__main__":
     root = tk.Tk()
