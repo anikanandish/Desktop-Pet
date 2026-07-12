@@ -55,6 +55,7 @@ class DesktopPet:
         self.label.bind("<Button-1>", self.start_drag)
         self.label.bind("<B1-Motion>", self.drag)
         self.label.bind("<Button-3>", lambda e: self.root.destroy()) # Right-click close
+        self.is_sleeping = False  # Track if the pet is awake or asleep
 
         # 5. Start Loops
         self.animate()
