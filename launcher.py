@@ -22,7 +22,13 @@ btn1.pack(pady=5)
 btn2 = tk.Button(root, text="Green Apple", command=lambda: launch_pet("green_apple"))
 btn2.pack(pady=5)
 
-btn2 = tk.Button(root, text="Coming Soon...", state="disabled")
-btn2.pack(pady=5)
+btn3 = tk.Button(root, text="Golden Mango", command=lambda: launch_pet("golden_mango"))
+btn3.pack(pady=5)
+
+btn4 = tk.Button(root, text="Blue Citrus", command=lambda: launch_pet("blue_citrus"))
+btn4.pack(pady=5)
+
+btn5 = tk.Button(root, text="Coming Soon...", state="disabled")
+btn5.pack(pady=5)
 
 root.mainloop()
