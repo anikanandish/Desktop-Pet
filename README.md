@@ -10,6 +10,13 @@ instead of sitting inside a window block.
 * Poke to Speak: Left-clicking the pet triggers a dynamic speech bubble over its head.
 * Under-the-Hood Stats: Built-in tracking variables for happiness levels, movement speed, walking direction, and interaction clicks.
 
+  ## Roadmap
+- [x] Implement basic screen boundary detection and directional movement loop.
+- [ ] Add more pets to choose from in the launcher screen.
+- [ ] Make the pet blurt out random thoughts on a timer.
+- [ ] Build a care mechanic where happiness drops over time if you ignore it.
+- [ ] Package everything into a standalone .exe installer so friends can download it easily.
+
 ## Built With
 * Python 
 * Tkinter (for the UI)
