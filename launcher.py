@@ -19,6 +19,9 @@ label.pack(pady=10)
 btn1 = tk.Button(root, text="Purple Berry", command=lambda: launch_pet("purple_berry"))
 btn1.pack(pady=5)
 
+btn2 = tk.Button(root, text="Green Apple", command=lambda: launch_pet("green_apple"))
+btn2.pack(pady=5)
+
 btn2 = tk.Button(root, text="Coming Soon...", state="disabled")
 btn2.pack(pady=5)
 
