@@ -12,6 +12,7 @@ root = tk.Tk()
 root.title("Choose Your Desktop Pet")
 root.geometry("300x200")
 root.resizable(False, False)  # Disables resizing for a cleaner UI layout
+root.protocol("WM_DELETE_WINDOW", root.quit)  # Cleanly exits python on window close
 
 label = tk.Label(root, text="Select a companion:", font=("Arial", 12))
 label.pack(pady=10)
