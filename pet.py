@@ -105,19 +105,23 @@ class DesktopPet:
         self.root.after(random.randint(3000, 6000), self.choose_new_action)
 
     def smooth_move_loop(self):
-        """Moves the pet fractions of the way to its target every 20ms for smooth sliding."""
+        """Moves the pet step-by-step to its target with a delay to prevent gliding."""
         # Calculate distance to target
         dx = self.target_x - self.x_pos
         dy = self.target_y - self.y_pos
 
-        # If we are far enough from target, step closer (easing effect)
-        if abs(dx) > 2 or abs(dy) > 2:
-            self.x_pos += int(dx * 0.05) # Moves 5% of the remaining distance per frame
-            self.y_pos += int(dy * 0.05)
+        # If we are far enough from target, take one distinct, choppy step
+        if abs(dx) > self.speed or abs(dy) > self.speed:
+            # Move by your flat speed (5 pixels) instead of a smooth percentage sliding scale
+            step_x = self.speed if dx > 0 else (-self.speed if dx < 0 else 0)
+            step_y = self.speed if dy > 0 else (-self.speed if dy < 0 else 0)
+            
+            self.x_pos += step_x
+            self.y_pos += step_y
             self.root.geometry(f"+{self.x_pos}+{self.y_pos}")
 
-        # Run at ~50 FPS for smooth rendering
-        self.root.after(20, self.smooth_move_loop)
+        # Changed from 20ms to 500ms so it pauses completely between steps!
+        self.root.after(500, self.smooth_move_loop)
 
 
     def check_blink(self):
