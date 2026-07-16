@@ -137,6 +137,52 @@ class DesktopPet:
             self.root.geometry(f"+{self.root.winfo_x() + self.speed}+{self.root.winfo_y()}")
         else:
             self.root.geometry(f"+{self.root.winfo_x() - self.speed}+{self.root.winfo_y()}")
+  
+    def try_to_speak(self, event):
+        """Spawns a separate text window right above the pet to avoid visual glitches."""
+        self.hide_speech() # Close any existing bubble first
+        
+        phrases = [
+            "Hi Anika!", 
+            "Keep coding!", 
+            "Break time?", 
+            "Doing great!", 
+            "Focus up! "
+        ]
+        chosen = random.choice(phrases)
+        
+        # 1. Create a tiny separate window just for the text
+        self.speech_window = tk.Toplevel(self.root)
+        self.speech_window.overrideredirect(True)
+        self.speech_window.wm_attributes("-topmost", True)
+        
+        # 2. Design the text label inside it
+        lbl = tk.Label(
+            self.speech_window, 
+            text=chosen, 
+            bg="#FFFFE0", # Classic light yellow comic bubble color
+            fg="black", 
+            font=("Arial", 9, "bold"), 
+            bd=1, 
+            relief="solid", 
+            padx=5, 
+            pady=2
+        )
+        lbl.pack()
+        
+        # 3. Position it centered right above the pet
+        bubble_x = self.x_pos + 10
+        bubble_y = self.y_pos - 30 
+        self.speech_window.geometry(f"+{bubble_x}+{bubble_y}")
+        
+        # 4. Make it disappear automatically after 2 seconds
+        self.root.after(2000, self.hide_speech)
+
+    def hide_speech(self):
+        """Safely destroys the speech window if it is currently active."""
+        if self.speech_window:
+            self.speech_window.destroy()
+            self.speech_window = None
 
 if __name__ == "__main__":
     root = tk.Tk()
