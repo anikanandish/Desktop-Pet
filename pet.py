@@ -145,7 +145,7 @@ class DesktopPet:
         phrases = [
             "Hi Anika!", 
             "Keep coding!", 
-            "Break time?", 
+            "Heads up Love", 
             "Doing great!", 
             "Focus up! "
             "Lets not forget why we're here!"
