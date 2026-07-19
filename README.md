@@ -17,6 +17,7 @@ instead of sitting inside a window block.
 - [x] Make the pet blurt out random thoughts on a timer.
 - [ ] Build a care mechanic where happiness drops over time if you ignore it.
 - [ ] Package everything into a standalone .exe installer so friends can download it easily.
+- [ ] A small test to decide pet according to user personality
 
 ## Built With
 * Python 
