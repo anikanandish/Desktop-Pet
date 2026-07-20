@@ -163,7 +163,7 @@ class DesktopPet:
         lbl = tk.Label(
             self.speech_window, 
             text=chosen, 
-            bg="#F8E0FF", # Classic light yellow comic bubble color
+            bg="#6FC2EF", # Classic light yellow comic bubble color
             fg="black", 
             font=("Arial", 9, "bold"), 
             bd=1, 
