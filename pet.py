@@ -1,5 +1,5 @@
 # Project: Desktop Pet Companion v1.1
-# Date: July 2026
+# Date: July  2026
 
 import tkinter as tk
 from PIL import Image, ImageTk
@@ -36,8 +36,7 @@ class DesktopPet:
         self.speed = 5  # Pixels it moves per frame update
         self.direction = "right"  # Can be "left" or "right"
         self.last_interact_time = 0  # Tracks timestamp of last click
-        # Track current state
-        self.state = "idle"
+        
       
 
 
