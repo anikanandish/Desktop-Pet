@@ -127,11 +127,7 @@ class DesktopPet:
         self.root.after(500, self.smooth_move_loop)
 
 
-    def check_blink(self):
-        # A simple 10% chance to blink on any given frame update
-        import random
-        if random.random() < 0.10:
-            print("Blinking!") # to be hooked up to a blink frame later
+   
     def update_movement(self):
         # Move right if direction is right, move left if direction is left
         if self.direction == "right":
