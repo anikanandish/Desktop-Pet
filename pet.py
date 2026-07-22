@@ -183,6 +183,7 @@ class DesktopPet:
             self.speech_window.destroy()
             self.speech_window = None
 
+print("Green apple setup ready!")
 if __name__ == "__main__":
     root = tk.Tk()
     app = DesktopPet(root)
