@@ -184,6 +184,7 @@ class DesktopPet:
             self.speech_window = None
 
 print("Green apple setup ready!")
+GREEN_APPLE_ENABLED = False
 if __name__ == "__main__":
     root = tk.Tk()
     app = DesktopPet(root)
