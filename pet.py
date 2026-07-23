@@ -27,10 +27,10 @@ class DesktopPet:
         self.sh = self.root.winfo_screenheight()
         
         # Core positioning variables
-        self.x_pos = 300
+        self.x_pos = 350
         
 
-        self.y_pos = 300
+        self.y_pos = 350
         self.target_x = self.x_pos
         self.target_y = self.y_pos
         self.root.geometry(f"100x100+{self.x_pos}+{self.y_pos}")
