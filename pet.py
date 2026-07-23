@@ -19,7 +19,7 @@ class DesktopPet:
         self.root.wm_attributes("-topmost", True)
         self.root.wm_attributes("-transparentcolor", "white")
         self.happiness = 100  # Starts at max happiness
-        self.click_count = 0  # Tracks user interactions
+       
         self.frame_files = ["green1.png"] if self.pet_type == "green_apple" else ["pet1.png", "pet2.png", "pet3.png"]
         
         # Screen dimensions
