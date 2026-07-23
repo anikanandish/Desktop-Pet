@@ -36,7 +36,6 @@ class DesktopPet:
         self.root.geometry(f"100x100+{self.x_pos}+{self.y_pos}")
         self.speed = 5  # Pixels it moves per frame update
         self.direction = "right"  # Can be "left" or "right"
-        self.last_interact_time = 0  # Tracks timestamp of last click
         
       
 
@@ -101,7 +100,7 @@ class DesktopPet:
         if random.random() < 0.70:
             # Pick a completely random spot on the screen
             # Shaving 150 off height keeps it safely above standard taskbars
-            self.target_x = random.randint(0, self.sw - 100)
+            self.target_x = random.randint(0, self.sw - 150)
             self.target_y = random.randint(0, self.sh - 150)
         
         # Decide next action interval (between 3 to 6 seconds)
