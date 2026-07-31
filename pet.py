@@ -1,5 +1,5 @@
-## Project: Desktop Pet Companion v1.1
-# Date: July 21 2026
+
+# TODO: suggestpet according to the time of day and user activity
 # TODO: Implement green apple sprite animation
 
 import os
