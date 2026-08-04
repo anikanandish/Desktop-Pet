@@ -21,7 +21,7 @@ class DesktopPet:
         self.root.overrideredirect(True)
         self.root.wm_attributes("-topmost", True)
         self.root.wm_attributes("-transparentcolor", "white")
-        self.happiness = 100  # Starts at max happiness
+       
 
         # 2. Select frames based on pet_type
         if self.pet_type == "green_apple":
