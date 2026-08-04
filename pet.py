@@ -170,3 +170,6 @@ if __name__ == "__main__":
     # Pass "green_apple" if you want the green apple pet, or leave blank for default!
     app = DesktopPet(root, pet_type="default")
     root.mainloop()
+
+
+    #just deleted my pngs while trying to do smthn
