@@ -56,7 +56,7 @@ class DesktopPet:
         self.label.bind("<ButtonRelease-1>", self.try_to_speak)
         self.label.bind(
             "<Button-3>", lambda e: self.root.destroy()
-        )  # Right-click close
+        )  # Right-click to close
 
         self.speech_window = None  # Tracks the floating speech bubble window
 
