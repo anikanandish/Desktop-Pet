@@ -142,7 +142,7 @@ class DesktopPet:
         lbl = tk.Label(
             self.speech_window,
             text=chosen ,
-            bg="#6FC2EF",
+            bg="#4E389E",
             fg="black",
             font=("Arial", 9, "bold"),
             bd=1,
