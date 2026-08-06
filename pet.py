@@ -132,6 +132,7 @@ class DesktopPet:
             "Doing great!",
             "Focus up!",
             "Lets not forget why we're here!",
+            "Guwnap",
         ]
         chosen = random.choice(phrases)
 
