@@ -125,7 +125,7 @@ class DesktopPet:
         """Spawns a separate text window right above the pet to avoid visual glitches."""
         self.hide_speech()
 
-        phrases = [
+        phrasess = [
             "Hi Anika!",
             "Keep coding!",
             "Heads up Love",
@@ -134,7 +134,7 @@ class DesktopPet:
             "Lets not forget why we're here!",
             "Guwnap",
         ]
-        chosen = random.choice(phrases)
+        chosen = random.choice(phrasess)
 
         self.speech_window = tk.Toplevel(self.root)
         self.speech_window.overrideredirect(True)
