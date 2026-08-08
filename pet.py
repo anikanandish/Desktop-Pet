@@ -174,3 +174,4 @@ if __name__ == "__main__":
 
 
     #just deleted my pngs while trying to do smthn
+    ##need my pngssssss:(
