@@ -1,7 +1,7 @@
 
 # TODO: suggestpet according to the time of day and user activity
 # TODO: Implement green apple sprite animation
-
+# TODO: add f1 themed stuff
 import os
 import random
 import tkinter as tk
