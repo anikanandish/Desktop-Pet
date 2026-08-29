@@ -1,7 +1,7 @@
 
 # TODO: suggestpet according to the time of day and user activity
 # TODO: Implement green apple sprite animation
-# TODO: add f1 themed stuff
+# TODO: add f1 themed stuff 
 import os
 import random
 import tkinter as tk
@@ -13,7 +13,7 @@ class DesktopPet:
     def __init__(self, root, pet_type="default"):
         self.root = root
 
-        # 0. Set pet type FIRST so other variables can check it!
+        # 0. Set pet type FIRST so other variables can check it
         self.pet_type = pet_type
 
         # 1. Window Configuration
@@ -160,8 +160,7 @@ class DesktopPet:
         bubble_y = self.y_pos - 30
         self.speech_window.geometry(f"+{bubble_x}+{bubble_y}")
 
-        self.root.after(2000, self.hide_speech)
-
+        
     def hide_speech(self):
         """Safely destroys the speech window if active."""
         if self.speech_window:
