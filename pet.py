@@ -168,11 +168,6 @@ class DesktopPet:
             self.speech_window = None
 
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    # Pass "green_apple" if you want the green apple pet, or leave blank for default!
-    app = DesktopPet(root, pet_type="default")
-    root.mainloop()
 
 
 
