@@ -1,36 +1,33 @@
 import tkinter as tk
 import subprocess
+import sys
+from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+PET_SCRIPT = SCRIPT_DIR / "pet.py"
 
 def launch_pet(pet_name):
     print(f"Launching {pet_name}...")
-    # This will eventually start your pet script and hand over the pet name!
-    subprocess.Popen(["python", "pet.py"])
-    root.destroy() # Closes the selection menu
+    subprocess.Popen(
+        [sys.executable, str(PET_SCRIPT), pet_name],
+        cwd=SCRIPT_DIR
+    )
+    root.destroy()
 
-# Create the selection window
 root = tk.Tk()
 root.title("Choose Your Desktop Pet")
-root.geometry("300x200")
-root.resizable(False, False)  # Disables resizing for a cleaner UI layout
-root.protocol("WM_DELETE_WINDOW", root.quit)  # Cleanly exits python on window close
+root.geometry("300x230")
+root.resizable(False, False)
 
-label = tk.Label(root, text="Select a companion:", font=("Arial", 12))
-label.pack(pady=10)
+tk.Label(root, text="Select a companion:", font=("Arial", 12)).pack(pady=10)
 
-# Buttons for your future pets!
-btn1 = tk.Button(root, text="Purple Berry", command=lambda: launch_pet("purple_berry"))
-btn1.pack(pady=5)
+tk.Button(root, text="Purple Berry",
+          command=lambda: launch_pet("default")).pack(pady=5)
 
-btn2 = tk.Button(root, text="Green Apple", command=lambda: launch_pet("green_apple"))
-btn2.pack(pady=5)
+tk.Button(root, text="Green Apple",
+          command=lambda: launch_pet("green_apple")).pack(pady=5)
 
-btn3 = tk.Button(root, text="Golden Mango", command=lambda: launch_pet("golden_mango"))
-btn3.pack(pady=5)
-
-btn4 = tk.Button(root, text="Blue Citrus", command=lambda: launch_pet("blue_citrus"))
-btn4.pack(pady=5)
-
-btn5 = tk.Button(root, text="Coming Soon...", state="disabled")
-btn5.pack(pady=5)
+tk.Button(root, text="Max F1",
+          command=lambda: launch_pet("f1")).pack(pady=5)
 
 root.mainloop()
