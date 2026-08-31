@@ -167,7 +167,14 @@ class DesktopPet:
             self.speech_window.destroy()
             self.speech_window = None
 
+if __name__ == "__main__":
+    import sys
 
+    selected_pet = sys.argv[1] if len(sys.argv) > 1 else "default"
+
+    root = tk.Tk()
+    app = DesktopPet(root, pet_type=selected_pet)
+    root.mainloop()
 
 
 
