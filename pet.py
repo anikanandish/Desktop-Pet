@@ -25,7 +25,7 @@ class DesktopPet:
 
         # 2. Select frames based on pet_type
         if self.pet_type == "green_apple":
-            self.frame_files = ["green1.png"]
+            self.frame_files = ["green1.png","green2.png", "green3.png"]
 
         elif self.pet_type == "f1":
             self.frame_files = ["f1_1.png", "f1_2.png", "f1_3.png"]
