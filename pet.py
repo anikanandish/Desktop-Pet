@@ -1,7 +1,6 @@
 
-# TODO: suggestpet according to the time of day and user activity
-# TODO: Implement green apple sprite animation
-# TODO: add f1 themed stuff 
+#TODO: the text doesn't follow pet when it moves.fix
+#TODO: make car move in track variations not jump around
 import os
 import random
 import tkinter as tk
