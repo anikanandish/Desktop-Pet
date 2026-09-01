@@ -8,9 +8,9 @@ PET_SCRIPT = SCRIPT_DIR / "pet.py"
 
 # Pet configurations: (Name, ID, Tagline/Emoji, Accent Color)
 PETS = [
-    ("Max F1", "f1", "🏎️  V10 Screamer - Built for speed", "#E10600"),
-    ("Purple Berry", "default", "🫐  Chill & bouncy companion", "#8A2BE2"),
-    ("Green Apple", "green_apple", "🍏  Crisp & energetic buddy", "#2ECC71"),
+    ("Max F1", "f1", "  V10 Screamer - Built for speed", "#0A28A1"),
+    ("Purple Berry", "default", "  Chill & bouncy companion", "#8A2BE2"),
+    ("Green Apple", "green_apple", " Crisp & energetic buddy", "#2ECC71"),
 ]
 
 
