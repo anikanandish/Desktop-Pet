@@ -9,7 +9,7 @@ instead of sitting inside a window block.
 * The Launcher Window: A clean startup menu (launcher.py) so you can select your pet before spawning it.
 * Poke to Speak: Left-clicking the pet triggers a dynamic speech bubble over its head.
 * Under-the-Hood Stats: Built-in tracking variables for happiness levels, movement speed, walking direction, and interaction clicks.
-* Expanded Roster: Support for multiple pet selection buttons including Green Apple, Golden Mango, and Blue Citrus.
+* Expanded Roster: Support for multiple pet selection buttons including purple berry, green apple and an f1 themed car.
 * 
   ## Roadmap
 - [x] Implement basic screen boundary detection and directional movement loop.
