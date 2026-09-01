@@ -15,7 +15,8 @@ instead of sitting inside a window block.
 - [x] Implement basic screen boundary detection and directional movement loop.
 - [x] Add more pets to choose from in the launcher screen.
 - [x] Make the pet blurt out random thoughts on a timer.
-
+- [x] f1 themed choosing
+    
 - [ ] Package everything into a standalone .exe installer so friends can download it easily.
 - [ ] A small test to decide pet according to user personality
 
