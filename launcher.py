@@ -11,6 +11,7 @@ PETS = [
     ("Max F1", "f1", "  V10 Screamer - Built for speed", "#0A28A1"),
     ("Purple Berry", "default", "  Chill & bouncy companion", "#8A2BE2"),
     ("Green Apple", "green_apple", " Crisp & energetic buddy", "#2ECC71"),
+    ########hyy
 ]
 
 
