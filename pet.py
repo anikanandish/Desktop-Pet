@@ -166,8 +166,8 @@ class DesktopPet:
             phrases = [
                 "Hammer time!",
                 "Still we rise!",
-                "Bono, my tyres are fine!",
-                "For the Tifosi!",
+                  "For the Tifosi!",
+                  "Tifosi forever!",
                 "Focus mode on.",
             ]
         elif self.pet_type == "f1":
