@@ -1,7 +1,7 @@
+from pathlib import Path
 import subprocess
 import sys
 import tkinter as tk
-from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PET_SCRIPT = SCRIPT_DIR / "pet.py"
@@ -9,9 +9,9 @@ PET_SCRIPT = SCRIPT_DIR / "pet.py"
 # Pet configurations: (Name, ID, Tagline/Emoji, Accent Color)
 PETS = [
     ("Max F1", "f1", "  V10 Screamer - Built for speed", "#0A28A1"),
+    ("Lewis LH44", "lewis", "  #44 Hammer Time - Tifosi Edition", "#E10600"),
     ("Purple Berry", "default", "  Chill & bouncy companion", "#8A2BE2"),
     ("Green Apple", "green_apple", " Crisp & energetic buddy", "#2ECC71"),
-    ########hyy
 ]
 
 
@@ -24,11 +24,10 @@ def launch_pet(pet_id):
 # --- Main Window Setup ---
 root = tk.Tk()
 root.title("Desktop Pet Launcher")
-root.geometry("380x420")
+root.geometry("380x500")  # Expanded slightly to fit 4 cards
 root.resizable(False, False)
 root.configure(bg="#121214")
 
-# Center window on screen
 root.eval("tk::PlaceWindow . center")
 
 # Header Section
@@ -66,11 +65,9 @@ def create_card(parent, title, pet_id, subtitle, accent):
     )
     card.pack(fill="x", pady=6, ipady=4)
 
-    # Left color strip
     accent_bar = tk.Frame(card, bg=accent, width=4)
     accent_bar.pack(side="left", fill="y")
 
-    # Content container
     info_frame = tk.Frame(card, bg="#1E1E24")
     info_frame.pack(side="left", fill="both", expand=True, padx=12, pady=8)
 
@@ -92,7 +89,6 @@ def create_card(parent, title, pet_id, subtitle, accent):
     )
     sub_lbl.pack(anchor="w", pady=(2, 0))
 
-    # Hover animations
     def on_enter(e):
         card.config(bg="#282830", highlightbackground=accent)
         info_frame.config(bg="#282830")
@@ -108,7 +104,6 @@ def create_card(parent, title, pet_id, subtitle, accent):
     def on_click(e):
         launch_pet(pet_id)
 
-    # Bind events across all child widgets in the card
     for w in (card, info_frame, title_lbl, sub_lbl):
         w.bind("<Enter>", on_enter)
         w.bind("<Leave>", on_leave)
