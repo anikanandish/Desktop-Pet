@@ -10,8 +10,9 @@ PET_SCRIPT = SCRIPT_DIR / "pet.py"
 PETS = [
     ("Max F1", "f1", "  V10 Screamer - Built for speed", "#0A28A1"),
     ("Lewis LH44", "lewis", "  #44 Hammer Time - Tifosi Edition", "#E10600"),
+    ("Ayrton Senna", "senna", "  King of Monaco - Gap seeker", "#FEDB00"),
     ("Purple Berry", "default", "  Chill & bouncy companion", "#8A2BE2"),
-    ("Green Apple", "green_apple", " Crisp & energetic buddy", "#2ECC71"),
+    ("Green Apple", "green_apple", "  Crisp & energetic buddy", "#2ECC71"),
 ]
 
 
@@ -24,7 +25,7 @@ def launch_pet(pet_id):
 # --- Main Window Setup ---
 root = tk.Tk()
 root.title("Desktop Pet Launcher")
-root.geometry("380x500")  # Expanded slightly to fit 4 cards
+root.geometry("380x580")  # Height updated for 5 cards
 root.resizable(False, False)
 root.configure(bg="#121214")
 
