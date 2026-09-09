@@ -27,6 +27,8 @@ class DesktopPet:
             self.frame_files = ["f1_1.png", "f1_2.png", "f1_3.png"]
         elif self.pet_type == "lewis":
             self.frame_files = ["lh1.png", "lh2.png", "lh3.png"]
+        elif self.pet_type == "senna":
+            self.frame_files = ["senna1.png", "senna2.png", "senna3.png"]
         else:
             self.frame_files = ["pet1.png", "pet2.png", "pet3.png"]
 
@@ -40,8 +42,8 @@ class DesktopPet:
         self.is_dragging = False
         self.root.geometry(f"100x100+{int(self.x_pos)}+{int(self.y_pos)}")
 
-        # F1 style waypoint motion
-        self.is_car = self.pet_type in ["f1", "lewis"]
+        # F1 style waypoint motion (includes senna)
+        self.is_car = self.pet_type in ["f1", "lewis", "senna"]
         self.current_speed = 6.0 if self.is_car else 3.0
         self.target_x = self.x_pos
         self.target_y = self.y_pos
@@ -111,24 +113,18 @@ class DesktopPet:
                 )
 
                 if pattern == "straight_fast":
-                    # Full screen straight blast
                     self.target_x = random.choice([margin, self.sw - margin])
-                    self.target_y = self.y_pos + random.choice(
-                        [-80, 0, 80]
-                    )
+                    self.target_y = self.y_pos + random.choice([-80, 0, 80])
                     self.current_speed = random.uniform(8.0, 12.0)
                 elif pattern == "chicane":
-                    # Quick sharp zig-zag
                     self.target_x = self.x_pos + random.choice([-250, 250])
                     self.target_y = self.y_pos + random.choice([-150, 150])
                     self.current_speed = random.uniform(5.5, 7.5)
                 else:
-                    # Broad sweeping apex
                     self.target_x = random.uniform(margin, self.sw - margin)
                     self.target_y = random.uniform(margin, self.sh - margin)
                     self.current_speed = random.uniform(6.0, 9.0)
 
-                # Clamp inside viewable display
                 self.target_x = max(
                     margin, min(self.target_x, self.sw - margin)
                 )
@@ -151,7 +147,6 @@ class DesktopPet:
             dist = math.hypot(dx, dy)
 
             if dist > self.current_speed:
-                # Normalized directional movement
                 self.x_pos += (dx / dist) * self.current_speed
                 self.y_pos += (dy / dist) * self.current_speed
                 self.root.geometry(f"+{int(self.x_pos)}+{int(self.y_pos)}")
@@ -162,14 +157,27 @@ class DesktopPet:
     def try_to_speak(self):
         self.hide_speech()
 
-        if self.pet_type == "lewis":
+        if self.pet_type == "senna":
+            phrases = [
+                "If you no longer go for a gap...",
+                "...you are no longer a racing driver.",
+                "Pure commitment!",
+                "Master of Monaco.",
+                "Full focus in the wet!",
+                "Push to the limit!",
+            ]
+            bubble_color = "#FEDB00"  # Iconic Brazilian / Senna Helmet Yellow
+            txt_color = "#0B2B11"     # Forest green text
+        elif self.pet_type == "lewis":
             phrases = [
                 "Hammer time!",
                 "Still we rise!",
-                  "For the Tifosi!",
-                  "Tifosi forever!",
+                "For the Tifosi!",
+                "Tifosi forever!",
                 "Focus mode on.",
             ]
+            bubble_color = "#E10600"
+            txt_color = "white"
         elif self.pet_type == "f1":
             phrases = [
                 "Simply lovely!",
@@ -177,6 +185,8 @@ class DesktopPet:
                 "Box, box, box!",
                 "DRS enabled!",
             ]
+            bubble_color = "#4E389E"
+            txt_color = "black"
         else:
             phrases = [
                 "Hi Anika!",
@@ -187,15 +197,14 @@ class DesktopPet:
                 "Let's not forget why we're here!",
                 "Guwnap",
             ]
+            bubble_color = "#4E389E"
+            txt_color = "black"
 
         chosen = random.choice(phrases)
 
         self.speech_window = tk.Toplevel(self.root)
         self.speech_window.overrideredirect(True)
         self.speech_window.wm_attributes("-topmost", True)
-
-        bubble_color = "#E10600" if self.pet_type == "lewis" else "#4E389E"
-        txt_color = "white" if self.pet_type == "lewis" else "black"
 
         lbl = tk.Label(
             self.speech_window,
@@ -211,12 +220,9 @@ class DesktopPet:
         lbl.pack()
 
         self.update_speech_position()
-
-        # Auto dismiss after 4 seconds
         self.speech_timer = self.root.after(4000, self.hide_speech)
 
     def update_speech_position(self):
-        """Anchors the active speech bubble above the pet at all times."""
         if self.speech_window and self.speech_window.winfo_exists():
             bubble_x = int(self.x_pos + 5)
             bubble_y = int(self.y_pos - 32)
