@@ -7,238 +7,188 @@ from PIL import Image, ImageTk
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 
+PET_CONFIG = {
+    "senna": {
+        "frames": ["senna1.png", "senna2.png", "senna3.png"],
+        "is_car": True, "anim_delay": 140, "base_speed": 6.0,
+        "bg": "#FEDB00", "fg": "#0B2B11",
+        "phrases": [
+            "If you no longer go for a gap...", "...you are no longer a racing driver.",
+            "Pure commitment!", "Master of Monaco.", "Push to the limit!"
+        ]
+    },
+    "lewis": {
+        "frames": ["lh1.png", "lh2.png", "lh3.png"],
+        "is_car": True, "anim_delay": 140, "base_speed": 6.0,
+        "bg": "#E10600", "fg": "white",
+        "phrases": ["Hammer time!", "Still we rise!", "For the Tifosi!", "Focus mode on."]
+    },
+    "f1": {
+        "frames": ["f1_1.png", "f1_2.png", "f1_3.png"],
+        "is_car": True, "anim_delay": 140, "base_speed": 6.0,
+        "bg": "#4E389E", "fg": "white",
+        "phrases": ["Simply lovely!", "Full throttle!", "Box, box, box!", "DRS enabled!"]
+    },
+    "green_apple": {
+        "frames": ["green1.png", "green2.png", "green3.png"],
+        "is_car": False, "anim_delay": 300, "base_speed": 3.0,
+        "bg": "#2E7D32", "fg": "white",
+        "phrases": ["Fresh and crisp!", "Crunch time!", "Stay healthy!"]
+    },
+    "default": {
+        "frames": ["pet1.png", "pet2.png", "pet3.png"],
+        "is_car": False, "anim_delay": 300, "base_speed": 3.0,
+        "bg": "#4E389E", "fg": "white",
+        "phrases": ["Keep coding!", "Doing great!", "Focus up!", "Let's build!"]
+    }
+}
+
 
 class DesktopPet:
-
-    def __init__(self, root, pet_type="default"):
+    def __init__(self, root: tk.Tk, pet_type: str = "default"):
         self.root = root
-        self.pet_type = pet_type
-
-        # Window Configuration
-        self.root.title("My Desktop Pet")
+        self.cfg = PET_CONFIG.get(pet_type, PET_CONFIG["default"])
+        
+        # Transparent borderless canvas setup
         self.root.overrideredirect(True)
         self.root.wm_attributes("-topmost", True)
-        self.root.wm_attributes("-transparentcolor", "white")
+        try:
+            self.root.wm_attributes("-transparentcolor", "white")
+        except tk.TclError:
+            pass  # Fallback gracefully for macOS/Linux
 
-        # Frame definitions
-        if self.pet_type == "green_apple":
-            self.frame_files = ["green1.png", "green2.png", "green3.png"]
-        elif self.pet_type == "f1":
-            self.frame_files = ["f1_1.png", "f1_2.png", "f1_3.png"]
-        elif self.pet_type == "lewis":
-            self.frame_files = ["lh1.png", "lh2.png", "lh3.png"]
-        elif self.pet_type == "senna":
-            self.frame_files = ["senna1.png", "senna2.png", "senna3.png"]
-        else:
-            self.frame_files = ["pet1.png", "pet2.png", "pet3.png"]
-
-        # Screen boundaries
-        self.sw = self.root.winfo_screenwidth()
-        self.sh = self.root.winfo_screenheight()
-
-        # Position and physics state
-        self.x_pos = 350.0
-        self.y_pos = 350.0
+        self.sw, self.sh = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
+        self.x, self.y = 350.0, 350.0
+        self.target_x, self.target_y = self.x, self.y
+        self.speed = self.cfg["base_speed"]
         self.is_dragging = False
-        self.root.geometry(f"100x100+{int(self.x_pos)}+{int(self.y_pos)}")
+        self.current_heading = 0.0
 
-        # F1 style waypoint motion (includes senna)
-        self.is_car = self.pet_type in ["f1", "lewis", "senna"]
-        self.current_speed = 6.0 if self.is_car else 3.0
-        self.target_x = self.x_pos
-        self.target_y = self.y_pos
+        # Load raw images for rotation transformations
+        self.raw_frames = self._load_raw_images()
+        self.frame_idx = 0
+        self.tk_image = ImageTk.PhotoImage(self.raw_frames[0])
 
-        self.frames = self.load_frames()
-        self.frame_index = 0
-
-        self.label = tk.Label(self.root, image=self.frames[0], bg="white")
+        self.label = tk.Label(self.root, image=self.tk_image, bg="white", bd=0)
         self.label.pack()
 
-        # Bind events
-        self.label.bind("<Button-1>", self.start_drag)
-        self.label.bind("<B1-Motion>", self.drag)
-        self.label.bind("<ButtonRelease-1>", self.stop_drag)
+        # Drag & exit controls
+        self.label.bind("<Button-1>", self._start_drag)
+        self.label.bind("<B1-Motion>", self._on_drag)
+        self.label.bind("<ButtonRelease-1>", self._stop_drag)
         self.label.bind("<Button-3>", lambda e: self.root.destroy())
 
-        self.speech_window = None
-        self.speech_timer = None
+        self.speech_win, self.speech_timer = None, None
 
-        # Start game loops
-        self.animate()
-        self.pick_next_track_sector()
-        self.smooth_move_loop()
+        # Main loops
+        self._animate()
+        self._pick_track_sector()
+        self._physics_step()
 
-    def load_frames(self):
-        loaded = []
-        for file in self.frame_files:
-            file_path = SCRIPT_DIR / file
-            if file_path.exists():
-                img = Image.open(file_path).resize((100, 100))
-                loaded.append(ImageTk.PhotoImage(img))
-            else:
-                print(f"Error: Missing image file '{file_path}'")
+    def _load_raw_images(self):
+        images = []
+        for file in self.cfg["frames"]:
+            path = SCRIPT_DIR / file
+            if not path.exists():
+                print(f"Error: Asset '{path}' missing.")
                 self.root.destroy()
                 sys.exit(1)
-        return loaded
+            images.append(Image.open(path).convert("RGBA").resize((100, 100)))
+        return images
 
-    def start_drag(self, event):
+    def _start_drag(self, event):
         self.is_dragging = True
-        self.drag_start_x = event.x
-        self.drag_start_y = event.y
+        self.drag_offset_x = event.x
+        self.drag_offset_y = event.y
 
-    def drag(self, event):
-        self.x_pos = float(event.x_root - self.drag_start_x)
-        self.y_pos = float(event.y_root - self.drag_start_y)
-        self.target_x, self.target_y = self.x_pos, self.y_pos
-        self.root.geometry(f"+{int(self.x_pos)}+{int(self.y_pos)}")
-        self.update_speech_position()
+    def _on_drag(self, event):
+        self.x = float(event.x_root - self.drag_offset_x)
+        self.y = float(event.y_root - self.drag_offset_y)
+        self.target_x, self.target_y = self.x, self.y
+        self.root.geometry(f"+{int(self.x)}+{int(self.y)}")
+        self._sync_speech_pos()
 
-    def stop_drag(self, event):
+    def _stop_drag(self, event):
         self.is_dragging = False
-        self.try_to_speak()
+        self.say_something()
 
-    def animate(self):
-        self.frame_index = (self.frame_index + 1) % len(self.frames)
-        self.label.config(image=self.frames[self.frame_index])
-        delay = 140 if self.is_car else 300
-        self.root.after(delay, self.animate)
+    def _animate(self):
+        self.frame_idx = (self.frame_idx + 1) % len(self.raw_frames)
+        frame = self.raw_frames[self.frame_idx]
 
-    def pick_next_track_sector(self):
-        """Simulates driving circuits (straights + turns) instead of random teleporting."""
+        # Rotate cars in movement direction
+        if self.cfg["is_car"] and self.current_heading:
+            frame = frame.rotate(-self.current_heading, expand=False, resample=Image.BICUBIC)
+
+        self.tk_image = ImageTk.PhotoImage(frame)
+        self.label.config(image=self.tk_image)
+        self.root.after(self.cfg["anim_delay"], self._animate)
+
+    def _pick_track_sector(self):
         if not self.is_dragging:
-            margin = 120
-            if self.is_car:
-                pattern = random.choice(
-                    ["straight_fast", "chicane", "hairpin", "sweep"]
-                )
-
-                if pattern == "straight_fast":
-                    self.target_x = random.choice([margin, self.sw - margin])
-                    self.target_y = self.y_pos + random.choice([-80, 0, 80])
-                    self.current_speed = random.uniform(8.0, 12.0)
-                elif pattern == "chicane":
-                    self.target_x = self.x_pos + random.choice([-250, 250])
-                    self.target_y = self.y_pos + random.choice([-150, 150])
-                    self.current_speed = random.uniform(5.5, 7.5)
+            m = 120
+            if self.cfg["is_car"]:
+                mode = random.choice(["straight", "turn", "chicane"])
+                if mode == "straight":
+                    self.target_x = random.choice([m, self.sw - m])
+                    self.speed = random.uniform(8.0, 12.0)
                 else:
-                    self.target_x = random.uniform(margin, self.sw - margin)
-                    self.target_y = random.uniform(margin, self.sh - margin)
-                    self.current_speed = random.uniform(6.0, 9.0)
-
-                self.target_x = max(
-                    margin, min(self.target_x, self.sw - margin)
-                )
-                self.target_y = max(
-                    margin, min(self.target_y, self.sh - margin)
-                )
+                    self.target_x = random.uniform(m, self.sw - m)
+                    self.target_y = random.uniform(m, self.sh - m)
+                    self.speed = random.uniform(5.5, 8.5)
             else:
                 self.target_x = random.randint(50, self.sw - 150)
                 self.target_y = random.randint(50, self.sh - 150)
-                self.current_speed = 3.0
+                self.speed = self.cfg["base_speed"]
 
-        next_interval = random.randint(2500, 5000)
-        self.root.after(next_interval, self.pick_next_track_sector)
+        self.root.after(random.randint(2500, 4500), self._pick_track_sector)
 
-    def smooth_move_loop(self):
-        """Runs at ~60 FPS so vehicle slides along track trajectories."""
+    def _physics_step(self):
         if not self.is_dragging:
-            dx = self.target_x - self.x_pos
-            dy = self.target_y - self.y_pos
+            dx, dy = self.target_x - self.x, self.target_y - self.y
             dist = math.hypot(dx, dy)
 
-            if dist > self.current_speed:
-                self.x_pos += (dx / dist) * self.current_speed
-                self.y_pos += (dy / dist) * self.current_speed
-                self.root.geometry(f"+{int(self.x_pos)}+{int(self.y_pos)}")
-                self.update_speech_position()
+            if dist > 1.0:
+                step = min(self.speed, dist)
+                self.x += (dx / dist) * step
+                self.y += (dy / dist) * step
+                self.current_heading = math.degrees(math.atan2(dy, dx))
+                self.root.geometry(f"+{int(self.x)}+{int(self.y)}")
+                self._sync_speech_pos()
 
-        self.root.after(16, self.smooth_move_loop)
+        self.root.after(16, self._physics_step)
 
-    def try_to_speak(self):
-        self.hide_speech()
+    def say_something(self):
+        self._dismiss_speech()
+        phrase = random.choice(self.cfg["phrases"])
 
-        if self.pet_type == "senna":
-            phrases = [
-                "If you no longer go for a gap...",
-                "...you are no longer a racing driver.",
-                "Pure commitment!",
-                "Master of Monaco.",
-                "Full focus in the wet!",
-                "Push to the limit!",
-            ]
-            bubble_color = "#FEDB00"  # Iconic Brazilian / Senna Helmet Yellow
-            txt_color = "#0B2B11"     # Forest green text
-        elif self.pet_type == "lewis":
-            phrases = [
-                "Hammer time!",
-                "Still we rise!",
-                "For the Tifosi!",
-                "Tifosi forever!",
-                "Focus mode on.",
-            ]
-            bubble_color = "#E10600"
-            txt_color = "white"
-        elif self.pet_type == "f1":
-            phrases = [
-                "Simply lovely!",
-                "Full throttle!",
-                "Box, box, box!",
-                "DRS enabled!",
-            ]
-            bubble_color = "#4E389E"
-            txt_color = "black"
-        else:
-            phrases = [
-                "Hi Anika!",
-                "Keep coding!",
-                "Heads up Love",
-                "Doing great!",
-                "Focus up!",
-                "Let's not forget why we're here!",
-                "Guwnap",
-            ]
-            bubble_color = "#4E389E"
-            txt_color = "black"
+        self.speech_win = tk.Toplevel(self.root)
+        self.speech_win.overrideredirect(True)
+        self.speech_win.wm_attributes("-topmost", True)
 
-        chosen = random.choice(phrases)
+        tk.Label(
+            self.speech_win, text=phrase,
+            bg=self.cfg["bg"], fg=self.cfg["fg"],
+            font=("Arial", 9, "bold"), bd=1, relief="solid", padx=8, pady=4
+        ).pack()
 
-        self.speech_window = tk.Toplevel(self.root)
-        self.speech_window.overrideredirect(True)
-        self.speech_window.wm_attributes("-topmost", True)
+        self._sync_speech_pos()
+        self.speech_timer = self.root.after(3500, self._dismiss_speech)
 
-        lbl = tk.Label(
-            self.speech_window,
-            text=chosen,
-            bg=bubble_color,
-            fg=txt_color,
-            font=("Arial", 9, "bold"),
-            bd=1,
-            relief="solid",
-            padx=8,
-            pady=4,
-        )
-        lbl.pack()
+    def _sync_speech_pos(self):
+        if self.speech_win and self.speech_win.winfo_exists():
+            self.speech_win.geometry(f"+{int(self.x + 5)}+{int(self.y - 32)}")
 
-        self.update_speech_position()
-        self.speech_timer = self.root.after(4000, self.hide_speech)
-
-    def update_speech_position(self):
-        if self.speech_window and self.speech_window.winfo_exists():
-            bubble_x = int(self.x_pos + 5)
-            bubble_y = int(self.y_pos - 32)
-            self.speech_window.geometry(f"+{bubble_x}+{bubble_y}")
-
-    def hide_speech(self):
+    def _dismiss_speech(self):
         if self.speech_timer:
             self.root.after_cancel(self.speech_timer)
             self.speech_timer = None
-        if self.speech_window and self.speech_window.winfo_exists():
-            self.speech_window.destroy()
-        self.speech_window = None
+        if self.speech_win and self.speech_win.winfo_exists():
+            self.speech_win.destroy()
+        self.speech_win = None
 
 
 if __name__ == "__main__":
-    selected_pet = sys.argv[1] if len(sys.argv) > 1 else "default"
-    root = tk.Tk()
-    app = DesktopPet(root, pet_type=selected_pet)
-    root.mainloop()
+    pet_name = sys.argv[1] if len(sys.argv) > 1 else "default"
+    app = DesktopPet(tk.Tk(), pet_type=pet_name)
+    app.root.mainloop()
