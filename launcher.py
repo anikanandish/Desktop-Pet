@@ -40,6 +40,7 @@ root.geometry("380x560")
 root.resizable(False, False)
 root.configure(bg=THEME["bg"])
 root.eval("tk::PlaceWindow . center")
+root.bind("<Escape>", lambda event: root.destroy())
 
 # Header Section
 header = tk.Frame(root, bg=THEME["bg"])
