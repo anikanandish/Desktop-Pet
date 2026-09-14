@@ -7,13 +7,12 @@ from tkinter import messagebox
 SCRIPT_DIR = Path(__file__).resolve().parent
 PET_SCRIPT = SCRIPT_DIR / "pet.py"
 
-# Minimal single-accent theme
 THEME = {
     "bg": "#0D0D11",
-    "card": "#16161D",
-    "hover": "#20202A",
+    "card": "#13131A",        # Changed from #19199E for a sleek dark-mode feel
+    "hover": "#1E1E28",
     "border": "#262633",
-    "accent": "#6366F1",       # Single cohesive accent (Electric Indigo)
+    "accent": "#6366F1",       # Electric Indigo
     "fg_main": "#F8FAFC",
     "fg_sub": "#94A3B8",
 }
